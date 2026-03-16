@@ -1,0 +1,34 @@
+package com.chanzo.hoodSquare.lostAndFound.mapper;
+
+import com.chanzo.hoodSquare.lostAndFound.dtos.ClaimRequestDTO;
+import com.chanzo.hoodSquare.lostAndFound.dtos.LostRequestDTO;
+import com.chanzo.hoodSquare.lostAndFound.dtos.LostResponseDTO;
+import com.chanzo.hoodSquare.lostAndFound.model.Claimed;
+import com.chanzo.hoodSquare.lostAndFound.model.Lost;
+
+public class LostMapper {
+    public static LostResponseDTO toDTO(Lost lost) {
+        LostResponseDTO dto = new LostResponseDTO();
+        dto.setId(lost.getId());
+        dto.setClaimNumber(lost.getClaimNumber());
+        dto.setMessage(lost.getMessage());
+        dto.setClaimed(lost.isClaimed());
+        dto.setImage(lost.getImage());
+        return dto;
+    }
+
+    public static Lost toEntity(LostRequestDTO requestDTO) {
+        Lost lost = new Lost();
+        lost.setMessage(requestDTO.getMessage());
+        lost.setImage(requestDTO.getImage());
+        lost.setClaimed(false);
+        return lost;
+    }
+
+    public static Claimed toModel(ClaimRequestDTO claimRequestDTO){
+        Claimed claimed =new Claimed();
+        claimed.setClaimNumber(claimRequestDTO.getClaimNumber());
+        claimed.setUsername(claimRequestDTO.getUsername());
+        return claimed;
+    }
+}
