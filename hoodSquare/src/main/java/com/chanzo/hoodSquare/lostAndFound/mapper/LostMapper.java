@@ -1,6 +1,7 @@
 package com.chanzo.hoodSquare.lostAndFound.mapper;
 
 import com.chanzo.hoodSquare.lostAndFound.dtos.ClaimRequestDTO;
+import com.chanzo.hoodSquare.lostAndFound.dtos.ClaimResponseDTO;
 import com.chanzo.hoodSquare.lostAndFound.dtos.LostRequestDTO;
 import com.chanzo.hoodSquare.lostAndFound.dtos.LostResponseDTO;
 import com.chanzo.hoodSquare.lostAndFound.model.Claimed;
@@ -30,5 +31,12 @@ public class LostMapper {
         claimed.setClaimNumber(claimRequestDTO.getClaimNumber());
         claimed.setUsername(claimRequestDTO.getUsername());
         return claimed;
+    }
+    public static ClaimResponseDTO toClaimDTO(Claimed claimed){
+        ClaimResponseDTO dto = new ClaimResponseDTO();
+        dto.setId(claimed.getId());
+        dto.setUsername(claimed.getUsername());
+        dto.setClaimNumber(claimed.getClaimNumber());
+        return dto;
     }
 }

@@ -1,9 +1,7 @@
 package com.chanzo.hoodSquare.lostAndFound.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +12,10 @@ public class Claimed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull
     private  String username;
+    @NotNull
+    @Column(name="claim_number")
     private String claimNumber;
 
 }

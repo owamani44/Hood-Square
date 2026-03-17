@@ -1,7 +1,9 @@
 package com.chanzo.hoodSquare.lostAndFound.service;
 
 import com.chanzo.hoodSquare.auth.service.UserInfoService;
+import com.chanzo.hoodSquare.event.ItemClaimedEvent;
 import com.chanzo.hoodSquare.lostAndFound.dtos.ClaimRequestDTO;
+import com.chanzo.hoodSquare.lostAndFound.dtos.ClaimResponseDTO;
 import com.chanzo.hoodSquare.lostAndFound.dtos.LostRequestDTO;
 import com.chanzo.hoodSquare.lostAndFound.dtos.LostResponseDTO;
 import com.chanzo.hoodSquare.lostAndFound.mapper.LostMapper;
@@ -11,6 +13,7 @@ import com.chanzo.hoodSquare.lostAndFound.repo.ClaimedRepo;
 import com.chanzo.hoodSquare.lostAndFound.repo.LostRepo;
 import com.chanzo.hoodSquare.security.service.AlertService;
 import lombok.AllArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +24,7 @@ public class LostService {
     private UserInfoService service;
     private final LostRepo repo;
     private final ClaimedRepo claimedRepo;
+    private final ApplicationEventPublisher publisher;
 
     public String generateClaimNumber() {
         String prefix = "C";
@@ -44,13 +48,17 @@ public class LostService {
     }
 
     @Transactional
-    public Claimed claimItem(ClaimRequestDTO claimRequestDTO){
+    public ClaimResponseDTO claimItem(ClaimRequestDTO claimRequestDTO){
         if(!service.isValidUser(claimRequestDTO.getUsername())){
             throw new RuntimeException("Invalid User");
         }
         Lost lost = new Lost();
         lost.setClaimed(true);
-       return claimedRepo.save(LostMapper.toModel(claimRequestDTO));
+       Claimed claimed = claimedRepo.save(LostMapper.toModel(claimRequestDTO));
+        publisher.publishEvent(new ItemClaimedEvent(claimed.getUsername(),
+                claimed.getClaimNumber()));
+        return LostMapper.toClaimDTO(claimed);
     }
+
 
 }
