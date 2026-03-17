@@ -8,6 +8,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@Table(name = "claimed")
 public class Claimed {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
