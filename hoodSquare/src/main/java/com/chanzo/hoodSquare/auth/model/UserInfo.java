@@ -25,8 +25,5 @@ public class UserInfo {
     @Column(unique = true)
     private String username;
     @NotNull
-    @Column(unique = true)
-    private String tel;
-    @NotNull
     private String password;
 }

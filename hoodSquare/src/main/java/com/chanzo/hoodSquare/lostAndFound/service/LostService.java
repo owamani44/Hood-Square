@@ -11,15 +11,17 @@ import com.chanzo.hoodSquare.lostAndFound.model.Claimed;
 import com.chanzo.hoodSquare.lostAndFound.model.Lost;
 import com.chanzo.hoodSquare.lostAndFound.repo.ClaimedRepo;
 import com.chanzo.hoodSquare.lostAndFound.repo.LostRepo;
-import com.chanzo.hoodSquare.security.service.AlertService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @Service
 @AllArgsConstructor
-public class LostService {
+public class LostService implements LostServiceInterface{
 
     private UserInfoService service;
     private final LostRepo repo;
@@ -38,18 +40,11 @@ public class LostService {
          }
         return claimNumber;
     }
-    @Transactional
-    public LostResponseDTO postLostItem(LostRequestDTO requestDTO){
 
-        Lost lost = LostMapper.toEntity(requestDTO);
-        lost.setClaimNumber(generateClaimNumber());
-        Lost saved= repo.save(lost);
-        return LostMapper.toDTO(saved);
-    }
 
     @Transactional
     public ClaimResponseDTO claimItem(ClaimRequestDTO claimRequestDTO){
-        if(!service.isValidUser(claimRequestDTO.getUsername())){
+        if(service.isValidUser(claimRequestDTO.getUsername())){
             throw new RuntimeException("Invalid User");
         }
         Lost lost = new Lost();
@@ -61,4 +56,19 @@ public class LostService {
     }
 
 
+    @Override
+    public LostResponseDTO postLostItem(LostRequestDTO requestDTO, MultipartFile image) {
+        try {
+            Lost lost = LostMapper.toEntity(requestDTO);
+            lost.setClaimNumber(generateClaimNumber());
+            if(image!=null && !image.isEmpty()){
+                lost.setImage(image.getBytes());
+            }
+            Lost saved = repo.save(lost);
+
+            return LostMapper.toDTO(saved);
+        } catch (IOException e){
+            throw new RuntimeException("Error processing image  ", e);
+        }
+    }
 }

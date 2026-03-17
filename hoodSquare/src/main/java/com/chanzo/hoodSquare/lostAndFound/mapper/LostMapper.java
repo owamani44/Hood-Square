@@ -14,14 +14,14 @@ public class LostMapper {
         dto.setClaimNumber(lost.getClaimNumber());
         dto.setMessage(lost.getMessage());
         dto.setClaimed(lost.isClaimed());
-        dto.setImage(lost.getImage());
+
         return dto;
     }
 
     public static Lost toEntity(LostRequestDTO requestDTO) {
         Lost lost = new Lost();
         lost.setMessage(requestDTO.getMessage());
-        lost.setImage(requestDTO.getImage());
+
         lost.setClaimed(false);
         return lost;
     }

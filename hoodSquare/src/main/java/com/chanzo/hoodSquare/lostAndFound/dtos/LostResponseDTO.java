@@ -8,7 +8,6 @@ import lombok.Setter;
 public class LostResponseDTO {
     private Long id;
     private String message;
-    private byte[] image;
     private boolean claimed;
     private String claimNumber;
 }

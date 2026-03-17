@@ -7,6 +7,5 @@ import lombok.Setter;
 @Setter
 public class LostRequestDTO {
     private String message;
-    private byte[] image;
     private boolean claimed;
 }
