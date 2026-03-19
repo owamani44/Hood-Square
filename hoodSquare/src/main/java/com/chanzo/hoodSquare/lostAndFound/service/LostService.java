@@ -41,6 +41,7 @@ public class LostService implements LostServiceInterface{
         return claimNumber;
     }
 
+        /**method first checks if a user claiming a lost item is really a valid user of hood square**/
 
     @Transactional
     public ClaimResponseDTO claimItem(ClaimRequestDTO claimRequestDTO){
