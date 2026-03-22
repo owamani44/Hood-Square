@@ -11,6 +11,7 @@ import com.chanzo.hoodSquare.lostAndFound.model.Claimed;
 import com.chanzo.hoodSquare.lostAndFound.model.Lost;
 import com.chanzo.hoodSquare.lostAndFound.repo.ClaimedRepo;
 import com.chanzo.hoodSquare.lostAndFound.repo.LostRepo;
+import com.chanzo.hoodSquare.market.mapper.SkillMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -30,14 +32,13 @@ public class LostService implements LostServiceInterface{
 
     public String generateClaimNumber() {
         String prefix = "C";
-        String suffix="0";
-        String base = prefix + suffix;
-        String claimNumber = base;
+        String claimNumber ;
        int counter = 1;
-         while (repo.existsByClaimNumber(claimNumber)) {;
-            claimNumber= base + counter;
-            counter++;
-         }
+       do {
+           claimNumber = prefix + String.format("%06d", counter);
+           counter++;
+       }
+         while (repo.existsByClaimNumber(claimNumber));
         return claimNumber;
     }
 
@@ -68,8 +69,13 @@ public class LostService implements LostServiceInterface{
             Lost saved = repo.save(lost);
 
             return LostMapper.toDTO(saved);
-        } catch (IOException e){
+        } catch (Exception e){
             throw new RuntimeException("Error processing image  ", e);
         }
+    }
+
+    public List<LostResponseDTO> getAllLost(){
+        List<Lost> losts = repo.findAll();
+        return losts.stream().map(LostMapper::toDTO).toList();
     }
 }

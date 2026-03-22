@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/services")
+@CrossOrigin("http://localhost:5173")
 @AllArgsConstructor
 public class SkillController {
     private final SkillService service;

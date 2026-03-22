@@ -9,5 +9,6 @@ public class LostResponseDTO {
     private Long id;
     private String message;
     private boolean claimed;
+    private byte[] image;
     private String claimNumber;
 }

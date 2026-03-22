@@ -10,14 +10,13 @@ public class AlertMapper {
         dto.setId(alert.getId());
         dto.setLocation(alert.getLocation());
         dto.setDescription(alert.getDescription());
-        dto.setImage(dto.getImage());
+        dto.setImage(alert.getImage());
         return dto;
     }
     public static Alert toEntity(AlertRequestDTO requestDTO){
         Alert alert= new Alert();
         alert.setLocation(requestDTO.getLocation());
         alert.setDescription(requestDTO.getDescription());
-        alert.setImage(requestDTO.getImage());
         return alert;
     }
 }

@@ -8,5 +8,5 @@ import lombok.Setter;
 public class AlertRequestDTO {
     private String location;
     private String description;
-    private byte[] image;
+
 }

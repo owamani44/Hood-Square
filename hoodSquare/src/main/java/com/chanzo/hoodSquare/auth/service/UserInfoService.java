@@ -34,7 +34,7 @@ public class UserInfoService {
     }
     @Transactional
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO){
-        UserInfo newUserInfo = UserInfoMapper.toModel(userRequestDTO);
+        UserInfo newUserInfo = UserInfoMapper.toEntity(userRequestDTO);
         String username = generateUsername(newUserInfo.getFirstName(),
                 newUserInfo.getLastName() );
         newUserInfo.setUsername(username);

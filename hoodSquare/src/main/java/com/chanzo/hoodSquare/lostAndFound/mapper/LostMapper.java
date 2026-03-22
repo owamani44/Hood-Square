@@ -13,6 +13,7 @@ public class LostMapper {
         dto.setId(lost.getId());
         dto.setClaimNumber(lost.getClaimNumber());
         dto.setMessage(lost.getMessage());
+        dto.setImage(lost.getImage());
         dto.setClaimed(lost.isClaimed());
 
         return dto;
