@@ -25,5 +25,7 @@ public class UserInfo {
     @Column(name = "phone_number", unique=true)
     private String phoneNumber;
     @NotNull
+    private String role;
+    @NotNull
     private String password;
 }

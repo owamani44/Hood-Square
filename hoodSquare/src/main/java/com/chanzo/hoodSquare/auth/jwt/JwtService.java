@@ -1,10 +1,12 @@
 package com.chanzo.hoodSquare.auth.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Base64;
@@ -20,7 +22,9 @@ public class JwtService {
         this.secretKey= Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String generateToken(String username){
+    public String generateToken(String username, String role){
+        HashMap<String, Object> claims = new HashMap<>();
+        claims.put("Role",role);
         return Jwts.builder()
                 .subject(username)
                 .issuedAt(new Date())
@@ -30,5 +34,22 @@ public class JwtService {
                 .compact();
     }
 
+    public Claims parseClaims(String token) {
+        return Jwts.parser()
+                .verifyWith((SecretKey) secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
 
+    public String extractUsername(String token){
+        return parseClaims(token).getSubject();
+    }
+    public Date getExpiration(String token){
+        return parseClaims(token).getExpiration();
+    }
+
+    public boolean isTokenExpired(String token){
+        return getExpiration(token).before(new Date());
+    }
 }

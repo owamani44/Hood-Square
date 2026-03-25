@@ -4,6 +4,7 @@ import com.chanzo.hoodSquare.auth.model.UserInfo;
 import com.chanzo.hoodSquare.auth.repo.UserInfoRepo;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -33,7 +34,7 @@ public class UserService implements UserDetailsService {
         return User.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .authorities(Collections.emptyList())
+                .authorities(new SimpleGrantedAuthority(user.getRole()))
                 .build();
     }
 }
