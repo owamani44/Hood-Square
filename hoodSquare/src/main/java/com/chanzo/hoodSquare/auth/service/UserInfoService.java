@@ -8,6 +8,7 @@ import com.chanzo.hoodSquare.auth.repo.UserInfoRepo;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.modulith.NamedInterface;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @NamedInterface
@@ -15,30 +16,18 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserInfoService {
     private final UserInfoRepo repo;
+    private final PasswordEncoder passwordEncoder;
 
     public boolean isValidUser(String username){
         return !repo.existsByUsername(username);
     }
 
 
-    public String generateUsername(String firstName, String lastName) {
-        String base = (firstName.substring(0,1) + lastName).toLowerCase();
 
-        String username = base;
-        int counter = 1;
-        while (repo.existsByUsername(username)) {
-            username = base + counter;
-            counter++;
-        }
-        return username;
-    }
     @Transactional
     public UserResponseDTO registerUser(UserRequestDTO userRequestDTO){
         UserInfo newUserInfo = UserInfoMapper.toEntity(userRequestDTO);
-        String username = generateUsername(newUserInfo.getFirstName(),
-                newUserInfo.getLastName() );
-        newUserInfo.setUsername(username);
-       // newUserInfo.setPassword(passwordEncoder.encode(newUserInfo.getPassword()));
+       newUserInfo.setPassword(passwordEncoder.encode(newUserInfo.getPassword()));
         UserInfo savedUserInfo = repo.save(newUserInfo);
         return UserInfoMapper.toDTO(savedUserInfo);
     }

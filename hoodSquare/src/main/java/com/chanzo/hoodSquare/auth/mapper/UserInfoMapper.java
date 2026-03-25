@@ -8,8 +8,8 @@ public class UserInfoMapper {
     public static UserResponseDTO toDTO(UserInfo userInfo){
         UserResponseDTO dto = new UserResponseDTO();
         dto.setId(userInfo.getId());
-        dto.setFirstName(userInfo.getFirstName());
-        dto.setLastName(userInfo.getLastName());
+        dto.setFullName(userInfo.getFullName());
+       dto.setPhoneNumber(userInfo.getPhoneNumber());
         dto.setUsername(userInfo.getUsername());
         dto.setPassword(userInfo.getPassword());
         return dto;
@@ -17,8 +17,9 @@ public class UserInfoMapper {
 
     public static UserInfo toEntity(UserRequestDTO requestDTO){
         UserInfo user = new UserInfo();
-        user.setFirstName(requestDTO.getFirstName());
-        user.setLastName(requestDTO.getLastName());
+        user.setFullName(requestDTO.getFullName());
+        user.setUsername(requestDTO.getUsername());
+        user.setPhoneNumber(requestDTO.getPhoneNumber());
         user.setPassword(requestDTO.getPassword());
         return user;
     }

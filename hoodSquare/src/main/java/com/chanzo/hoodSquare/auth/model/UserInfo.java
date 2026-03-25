@@ -16,14 +16,14 @@ public class UserInfo {
     @Id
     private Long id;
     @NotNull
-    @Column(name="first_name")
-    private String firstName;
-    @NotNull
-    @Column(name="last_name")
-    private String lastName;
+    @Column(name="full_name")
+    private String fullName;
     @NotNull
     @Column(unique = true)
     private String username;
+    @NotNull
+    @Column(name = "phone_number", unique=true)
+    private String phoneNumber;
     @NotNull
     private String password;
 }

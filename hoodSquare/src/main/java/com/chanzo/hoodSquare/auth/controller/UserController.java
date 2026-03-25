@@ -1,5 +1,6 @@
 package com.chanzo.hoodSquare.auth.controller;
 
+import com.chanzo.hoodSquare.auth.dtos.LoginRequestDTO;
 import com.chanzo.hoodSquare.auth.dtos.UserRequestDTO;
 import com.chanzo.hoodSquare.auth.dtos.UserResponseDTO;
 import com.chanzo.hoodSquare.auth.service.UserInfoService;
@@ -21,5 +22,10 @@ public class UserController {
     public ResponseEntity<UserResponseDTO> registerUser(@RequestBody UserRequestDTO userRequestDTO){
         UserResponseDTO userResponseDTO = service.registerUser(userRequestDTO);
         return ResponseEntity.ok().body(userResponseDTO);
+    }
+
+    @PostMapping("authenticate")
+    public ResponseEntity<LoginRequestDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO){
+        return ResponseEntity.ok().body(loginRequestDTO);
     }
 }
