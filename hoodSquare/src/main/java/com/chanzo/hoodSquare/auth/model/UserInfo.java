@@ -11,6 +11,7 @@ import lombok.Setter;
 @Table(name = "user_info")
 public class UserInfo {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
     @Column(name="full_name")

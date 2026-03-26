@@ -1,13 +1,17 @@
 package com.chanzo.hoodSquare.auth.config;
 
 import com.chanzo.hoodSquare.auth.jwt.JwtFilter;
+import com.chanzo.hoodSquare.auth.jwt.JwtService;
 import com.chanzo.hoodSquare.auth.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,21 +31,23 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class SecurityConfig {
 
-    private  UserDetailsService userDetailsService;
-    private JwtFilter jwtFilter;
 
-    @Value("${app.cors.allowed-origins}")
-    private List<String> allowedOrigins;
+    private final JwtFilter jwtFilter;
+
+//    @Value("${app.cors.allowed-origins}")
+//    private List<String> allowedOrigins;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http.csrf(AbstractHttpConfigurer::disable);
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource()));
         http.authorizeHttpRequests(authorize-> authorize
-                .requestMatchers("/auth/register","/auth/authenticate").permitAll()
+                .requestMatchers("/auth/register","/auth/login").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
@@ -52,10 +58,10 @@ public class SecurityConfig {
         return new UserService();
     }
     @Bean
-    public AuthenticationManager authenticationManager (UserDetailsService userDetailsService) {
+    public AuthenticationProvider authenticationProvider (UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
         DaoAuthenticationProvider provider=new DaoAuthenticationProvider(userDetailsService);
-        provider.setPasswordEncoder(new BCryptPasswordEncoder());
-        return new ProviderManager(provider);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
     }
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -64,7 +70,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-       config.setAllowedOrigins(allowedOrigins);
+       config.setAllowedOrigins(List.of("http://localhost:5173","http://127.0.0.1:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);

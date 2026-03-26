@@ -16,6 +16,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin("http://localhost:5173")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -27,13 +28,13 @@ public class UserController {
         return ResponseEntity.ok().body(userResponseDTO);
     }
 
-    @PostMapping("/authenticate")
+    @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO){
-        String token= service.authenticate(loginRequestDTO);
+       Optional<String> token= service.authenticate(loginRequestDTO);
         if (token.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        return ResponseEntity.ok().body(new LoginResponseDTO(token));
+        return ResponseEntity.ok().body(new LoginResponseDTO(token.get()));
     }
 
     @GetMapping("/{id}")

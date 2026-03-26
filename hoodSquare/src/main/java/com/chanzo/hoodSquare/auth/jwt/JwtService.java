@@ -15,10 +15,11 @@ import java.util.HashMap;
 
 @Service
 public class JwtService {
-    private final Key secretKey;
+    private final SecretKey secretKey;
 
     public JwtService(@Value("${jwt.secret}") String secret) {
-        byte[] keyBytes = Base64.getDecoder().decode(secret.getBytes(StandardCharsets.UTF_8));
+        //byte[] keyBytes = Base64.getDecoder().decode(secret.getBytes(StandardCharsets.UTF_8));
+        byte[] keyBytes = Base64.getDecoder().decode(secret.trim());
         this.secretKey= Keys.hmacShaKeyFor(keyBytes);
     }
 
@@ -29,14 +30,14 @@ public class JwtService {
                 .subject(username)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis()+1000*60*60*24))
-                .claims(claims)
+                .claim("Role", role)
                 .signWith(secretKey)
                 .compact();
     }
 
     public Claims parseClaims(String token) {
         return Jwts.parser()
-                .verifyWith((SecretKey) secretKey)
+                .verifyWith(secretKey)
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
