@@ -57,5 +57,12 @@ public class UserInfoService {
         return null;
     }
 
+    public UserResponseDTO getUserInfo(Long id){
+        return UserInfoMapper.toDTO(repo.findUserInfoById(id));
+    }
+
+    public void deleteUser(Long id){
+        repo.deleteById(id);
+    }
 
 }

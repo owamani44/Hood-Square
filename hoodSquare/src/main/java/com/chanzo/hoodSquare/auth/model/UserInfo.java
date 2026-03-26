@@ -1,9 +1,6 @@
 package com.chanzo.hoodSquare.auth.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +22,8 @@ public class UserInfo {
     @Column(name = "phone_number", unique=true)
     private String phoneNumber;
     @NotNull
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @NotNull
     private String password;
 }

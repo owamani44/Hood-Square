@@ -1,5 +1,6 @@
 package com.chanzo.hoodSquare.auth.dtos;
 
+import com.chanzo.hoodSquare.auth.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,5 +11,6 @@ public class UserResponseDTO {
     private String fullName;
     private String phoneNumber;
     private String username;
+    private Role role;
     private String password;
 }
