@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 
 @Controller
 @CrossOrigin("http://localhost:5173")
-        @PreAuthorize("hasAnyRole('ADMIN','USER')")
 public class ChatController {
 
     @MessageMapping("/chat.sendMessage")

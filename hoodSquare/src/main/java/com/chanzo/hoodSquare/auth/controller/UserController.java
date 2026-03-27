@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -31,17 +32,14 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody LoginRequestDTO loginRequestDTO){
        Optional<String> token= service.authenticate(loginRequestDTO);
-        if (token.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-        return ResponseEntity.ok().body(new LoginResponseDTO(token.get()));
+        return token.map(s -> ResponseEntity.ok().body(new LoginResponseDTO(s)))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
     }
 
-    @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','USER')")
-    @PostAuthorize("returnObject.username == authentication.name")
-    public UserResponseDTO getUserById(@PathVariable Long id){
-         return service.getUserInfo(id);
+
+    @GetMapping("/me")
+    public ResponseEntity<UserResponseDTO> getMe(Principal principal) {
+        return ResponseEntity.ok(service.getUserInfo(principal.getName()));
     }
 
     @PreAuthorize("hasAnyRole('ADMIN')")

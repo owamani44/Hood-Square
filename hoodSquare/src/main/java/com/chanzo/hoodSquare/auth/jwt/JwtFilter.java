@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -40,6 +41,8 @@ public class JwtFilter extends OncePerRequestFilter {
 
 
         String authHeader = request.getHeader("Authorization");
+        System.out.println(">>> Auth header: " + authHeader);  // ← add this
+        System.out.println(">>> Request URI: " + request.getRequestURI());
         String token = null;
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
@@ -48,16 +51,19 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 Claims claims = jwtService.parseClaims(token);
                 String role = claims.get("Role", String.class);
-
-                List<SimpleGrantedAuthority> simpleGrantedAuthorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
-
+                List<SimpleGrantedAuthority> simpleGrantedAuthorities =
+                        List.of(new SimpleGrantedAuthority(role));
                 if (!jwtService.isTokenExpired(token)) {
                     UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                             new UsernamePasswordAuthenticationToken(claims.getSubject(), null, simpleGrantedAuthorities);
                     usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+                    Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+                    System.out.println(">>> Authorities: " + auth.getAuthorities());
+                    System.out.println(">>> Is authenticated: " + auth.isAuthenticated());
                 }
             } catch (Exception e) {
+                System.out.println("JWT Filter Error: " + e.getMessage());
                 SecurityContextHolder.clearContext();
             }
         }

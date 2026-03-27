@@ -70,8 +70,8 @@ public class UserInfoService {
         return token;
     }
 
-    public UserResponseDTO getUserInfo(Long id){
-        return UserInfoMapper.toDTO(repo.findUserInfoById(id));
+    public UserResponseDTO getUserInfo(String username){
+        return UserInfoMapper.toDTO(repo.findUserInfoByUsername(username));
     }
 
     public void deleteUser(Long id){

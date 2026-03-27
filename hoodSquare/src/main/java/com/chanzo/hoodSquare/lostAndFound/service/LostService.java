@@ -35,7 +35,7 @@ public class LostService implements LostServiceInterface{
         String claimNumber ;
        int counter = 1;
        do {
-           claimNumber = prefix + String.format("%06d", counter);
+           claimNumber = prefix + String.format("%02d", counter);
            counter++;
        }
          while (repo.existsByClaimNumber(claimNumber));
