@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -42,10 +43,16 @@ public class UserController {
         return ResponseEntity.ok(service.getUserInfo(principal.getName()));
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id){
         service.deleteUser(id);
        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
+        List<UserResponseDTO> dto2 = service.getUsers();
+        return ResponseEntity.ok().body(dto2);
     }
 }

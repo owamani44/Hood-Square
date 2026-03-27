@@ -18,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @NamedInterface
@@ -72,6 +73,10 @@ public class UserInfoService {
 
     public UserResponseDTO getUserInfo(String username){
         return UserInfoMapper.toDTO(repo.findUserInfoByUsername(username));
+    }
+    public List<UserResponseDTO> getUsers(){
+        List<UserInfo> users = repo.findAll();
+        return users.stream().map(UserInfoMapper::toDTO).toList();
     }
 
     public void deleteUser(Long id){
