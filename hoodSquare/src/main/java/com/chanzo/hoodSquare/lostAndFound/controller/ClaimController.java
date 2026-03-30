@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @CrossOrigin("http://localhost:5173")
 @RequestMapping("/claim")
@@ -19,5 +21,11 @@ public class ClaimController {
     public ResponseEntity<ClaimResponseDTO> claimItem(@RequestBody ClaimRequestDTO requestDTO) {
         ClaimResponseDTO claimDTO= service.claimItem(requestDTO);
         return ResponseEntity.ok().body(claimDTO);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ClaimResponseDTO>> getAllClaims(){
+        List<ClaimResponseDTO> dto = service.getAllClaims();
+        return ResponseEntity.ok().body(dto);
     }
 }

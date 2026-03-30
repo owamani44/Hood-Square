@@ -18,9 +18,9 @@ public class SkillService {
     private final UserInfoService userInfoService;
 
     public SkillResponseDTO uploadSkill(SkillRequestDTO requestDTO){
-//        if(userInfoService.isValidUser(requestDTO.getUsername())){
-//            throw new RuntimeException("Must be a valid user");
-//        }
+       if(userInfoService.isValidUser(requestDTO.getUsername())){
+           throw new RuntimeException("Must be a valid user");
+       }
         Skill skill= repo.save(SkillMapper.toEntity(requestDTO));
         return SkillMapper.toDTO(skill);
     }

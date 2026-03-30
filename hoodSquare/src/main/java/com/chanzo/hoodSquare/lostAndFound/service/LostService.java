@@ -49,8 +49,11 @@ public class LostService implements LostServiceInterface{
         if(service.isValidUser(claimRequestDTO.getUsername())){
             throw new RuntimeException("Invalid User");
         }
-        Lost lost = new Lost();
+        Lost lost = repo.findByClaimNumber(claimRequestDTO.getClaimNumber())
+                .orElseThrow(() -> new RuntimeException("Item not found"));
+
         lost.setClaimed(true);
+        repo.save(lost);
        Claimed claimed = claimedRepo.save(LostMapper.toModel(claimRequestDTO));
         publisher.publishEvent(new ItemClaimedEvent(claimed.getUsername(),
                 claimed.getClaimNumber()));
@@ -77,5 +80,9 @@ public class LostService implements LostServiceInterface{
     public List<LostResponseDTO> getAllLost(){
         List<Lost> losts = repo.findAll();
         return losts.stream().map(LostMapper::toDTO).toList();
+    }
+    public List<ClaimResponseDTO> getAllClaims(){
+        List<Claimed> claims =claimedRepo.findAll();
+        return claims.stream().map(LostMapper::toClaimDTO).toList();
     }
 }

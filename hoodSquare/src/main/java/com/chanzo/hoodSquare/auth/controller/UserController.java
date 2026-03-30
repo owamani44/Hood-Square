@@ -50,7 +50,7 @@ public class UserController {
        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping
+    @GetMapping("users")
     public ResponseEntity<List<UserResponseDTO>> getAllUsers(){
         List<UserResponseDTO> dto2 = service.getUsers();
         return ResponseEntity.ok().body(dto2);
