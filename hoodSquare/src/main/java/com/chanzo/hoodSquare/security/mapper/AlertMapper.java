@@ -10,6 +10,7 @@ public class AlertMapper {
         dto.setId(alert.getId());
         dto.setLocation(alert.getLocation());
         dto.setDescription(alert.getDescription());
+        dto.setCreatedAt(alert.getCreatedAt());
         dto.setImage(alert.getImage());
         return dto;
     }
